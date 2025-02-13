@@ -48,6 +48,11 @@ function Dashboard() {
     });
     const [loading, setLoading] = useState(true);
     const [selectedFilter, setSelectedFilter] = useState("all");
+    const [chartTypes, setChartTypes] = useState({
+        pickStatus: 'pie',
+        ordersDistribution: 'bar',
+        ordersAtPricing: 'line'
+    });
     const navigate = useNavigate();
     // Function to fetch filtered data
     const fetchFilteredData = async (filter) => {
@@ -120,6 +125,19 @@ function Dashboard() {
         setSelectedFilter(value);
     };
 
+    const renderChart = (type, data, chartName) => {
+        switch (type) {
+            case 'bar':
+                return <CustomBarCharts data={data} />;
+            case 'line':
+                return <CustomLineChart data={data} />;
+            case 'pie':
+                return <StatusPieChart data={data} />;
+            default:
+                return null;
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-background via-[#1a2035] to-[#141b2d] p-8 flex items-center justify-center">
@@ -132,11 +150,10 @@ function Dashboard() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-background via-[#1a2035] to-[#141b2d] p-8 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-background via-[#1a2035] to-[#141b2d] p-8">
             <div className="max-w-7xl mx-auto space-y-8">
-                
-                {/* Filter Dropdown */}
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-between items-center">
+                    <h1 className="text-3xl font-bold text-white">Dashboard Overview</h1>
                     <Select 
                         value={selectedFilter}
                         onValueChange={handleFilterChange}
@@ -160,46 +177,50 @@ function Dashboard() {
                     </Select>
                 </div>
 
-                {/* Dashboard Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
-                    <OrderStatusCard title="Approved" value={dashboardData.approved}  onClick={() => handleCardClick('Approved')}/>
-                    <OrderStatusCard title="To be Approved" value={dashboardData.toBeApprovedOrdersC}  onClick={() => handleCardClick('To be Approved')} />
-                    <OrderStatusCard title="Invoiced Orders" value={dashboardData.invoicedOrders}  onClick={() => handleCardClick('Invoiced')}/>
-                    <OrderStatusCard title="Cancelled Orders" value={dashboardData.canceledOrders}  onClick={() => handleCardClick('Cancelled')}/>
-                    <OrderStatusCard title="Approved On Hold" value={dashboardData.approvedOnHold}  onClick={() => handleCardClick('Approved - On Hold')}/>
-                    <OrderStatusCard title="Approved Back Order" value={dashboardData.approvedBackOrder}  onClick={() => handleCardClick('Approved Back')}/>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <OrderStatusCard title="Approved" value={dashboardData.approved} onClick={() => handleCardClick('Approved')}/>
+                    <OrderStatusCard title="To be Approved" value={dashboardData.toBeApprovedOrdersC} onClick={() => handleCardClick('To be Approved')} />
+                    <OrderStatusCard title="Invoiced Orders" value={dashboardData.invoicedOrders} onClick={() => handleCardClick('Invoiced')}/>
+                    <OrderStatusCard title="Cancelled Orders" value={dashboardData.canceledOrders} onClick={() => handleCardClick('Cancelled')}/>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <OrderStatusCard title="Approved On Hold" value={dashboardData.approvedOnHold} onClick={() => handleCardClick('Approved - On Hold')}/>
+                    <OrderStatusCard title="Approved Back Order" value={dashboardData.approvedBackOrder} onClick={() => handleCardClick('Approved Back')}/>
                     <OrderStatusCard title="On Hold" value={dashboardData.onhold} onClick={() => handleCardClick('On hold')}/>
                 </div>
 
-                {/* Charts */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <DashboardCard title="Pick Status" subtitle="Daily Overview">
-                        <div className="flex items-center justify-between mb-4">
-                            <div></div>
-                            <PieChartIcon className="text-accent h-8 w-8" />
-                        </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <DashboardCard 
+                        title="Pick Status" 
+                        subtitle="Daily Overview"
+                        allowedTypes={['pie', 'bar']}
+                        onTypeChange={(type) => setChartTypes(prev => ({...prev, pickStatus: type}))}
+                    >
                         <div className="h-[300px]">
-                            <StatusPieChart data={dashboardData.pickStatus} />
+                            {renderChart(chartTypes.pickStatus, dashboardData.pickStatus, 'pickStatus')}
                         </div>
                     </DashboardCard>
 
-                    <DashboardCard title="Expected Orders vs Distributed Orders" subtitle="Performance">
-                        <div className="flex items-center justify-between mb-4">
-                            <div></div>
-                            <BarChartIcon className="text-secondary h-8 w-8" />
-                        </div>
+                    <DashboardCard 
+                        title="Expected Orders vs Distributed Orders" 
+                        subtitle="Performance"
+                        allowedTypes={['bar', 'line']}
+                        onTypeChange={(type) => setChartTypes(prev => ({...prev, ordersDistribution: type}))}
+                    >
                         <div className="h-[300px]">
-                            <CustomBarCharts data={dashboardData.ordersByDay} />
+                            {renderChart(chartTypes.ordersDistribution, dashboardData.ordersByDay, 'ordersDistribution')}
                         </div>
                     </DashboardCard>
 
-                    <DashboardCard title="Orders At Pricing" subtitle="On Hold Orders">
-                        <div className="flex items-center justify-between mb-4">
-                            <div></div>
-                            <LineChartIcon className="text-primary h-8 w-8" />
-                        </div>
+                    <DashboardCard 
+                        title="Orders At Pricing" 
+                        subtitle="On Hold Orders"
+                        allowedTypes={['line', 'bar']}
+                        onTypeChange={(type) => setChartTypes(prev => ({...prev, ordersAtPricing: type}))}
+                    >
                         <div className="h-[300px]">
-                            <CustomLineChart data={dashboardData.toBeApprovedOrders} />
+                            {renderChart(chartTypes.ordersAtPricing, dashboardData.toBeApprovedOrders, 'ordersAtPricing')}
                         </div>
                     </DashboardCard>
                 </div>
