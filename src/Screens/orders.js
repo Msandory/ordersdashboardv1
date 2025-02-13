@@ -21,7 +21,7 @@ import { Button } from "../Components/UI/Button.jsx";
 import { Search, SlidersHorizontal, Calendar } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../Components/UI/Popover.jsx";
 import { getOrdersByDistributionStatusAndDate } from "../API/API"; // Adjust import path as needed
-import { useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Pagination,
   PaginationContent,
@@ -30,6 +30,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../Components/UI/pagination.jsx";
+
 // Status color mapping
 const statusColors = {
   "To be Approved": "bg-sky-300", // Lighter blue for a less urgent feel
@@ -59,7 +60,7 @@ const OrdersIndex = () => {
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
-  }
+    }
   };
 
     // Fetch orders on component mount and when filters change
@@ -201,128 +202,124 @@ useEffect(() => {
             className="pl-8"
           />
         </div>
- {/* Filter Dropdown */}
- 
-                    <Select 
-                        value={selectedFilter}
-                        onValueChange={handleFilterChange}
-                    >
-                        <SelectTrigger className="w-[180px] bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20">
-                            <SelectValue placeholder="Select filter">
-                                {filterOptions.find(opt => opt.value === selectedFilter)?.label}
-                            </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent className="bg-[#1a2035] border-white/20 text-white">
-                            {filterOptions.map((option) => (
-                                <SelectItem 
-                                    key={option.value}
-                                    value={option.value}
-                                    className="focus:bg-white/10 focus:text-white"
-                                >
-                                    {option.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                
+
+        {/* Filter Dropdown */}
+        <Select 
+          value={selectedFilter}
+          onValueChange={handleFilterChange}
+        >
+          <SelectTrigger className="w-[180px] bg-[#1a2035] border-white/20 text-white hover:bg-white/20">
+            <SelectValue placeholder="Select filter" />
+          </SelectTrigger>
+          <SelectContent className="bg-[#1a2035] border-white/20 text-white">
+            {filterOptions.map((option) => (
+              <SelectItem 
+                key={option.value}
+                value={option.value}
+                className="focus:bg-white/10 focus:text-white"
+              >
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         {/* Distribution Status Filter */}
         <DropdownMenu>
-  <DropdownMenuTrigger asChild>
-    <Button 
-      variant="outline" 
-      className="min-w-[140px] bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
-    >
-      <SlidersHorizontal className="h-4 w-4 mr-2" />
-      Distribution Status
-    </Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent className="bg-[#1a2035] border-white/20">
-    <DropdownMenuItem 
-      onClick={() => setDistributionStatusFilter(null)}
-      className="focus:bg-white/10 focus:text-white"
-    >
-      All
-    </DropdownMenuItem>
-    <DropdownMenuItem 
-      onClick={() => setDistributionStatusFilter("Approved")}
-      className="focus:bg-white/10 focus:text-white"
-    >
-      Approved
-    </DropdownMenuItem>
-    <DropdownMenuItem 
-      onClick={() => setDistributionStatusFilter("To be Approved")}
-      className="focus:bg-white/10 focus:text-white"
-    >
-      To be Approved
-    </DropdownMenuItem>
-    <DropdownMenuItem 
-      onClick={() => setDistributionStatusFilter("Invoiced")}
-      className="focus:bg-white/10 focus:text-white"
-    >
-      Invoiced Orders
-    </DropdownMenuItem>
-    <DropdownMenuItem 
-      onClick={() => setDistributionStatusFilter("Cancelled")}
-      className="focus:bg-white/10 focus:text-white"
-    >
-      Canceled Orders
-    </DropdownMenuItem>
-    <DropdownMenuItem 
-      onClick={() => setDistributionStatusFilter("Approved - On Hold")}
-      className="focus:bg-white/10 focus:text-white"
-    >
-      Approved On Hold Orders
-    </DropdownMenuItem>
-    <DropdownMenuItem 
-      onClick={() => setDistributionStatusFilter("Approved Back order")}
-      className="focus:bg-white/10 focus:text-white"
-    >
-      Approved Back Order Orders
-    </DropdownMenuItem>
-    <DropdownMenuItem 
-      onClick={() => setDistributionStatusFilter("On Hold")}
-      className="focus:bg-white/10 focus:text-white"
-    >
-      On Hold Orders
-    </DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="outline" 
+              className="min-w-[140px] bg-[#1a2035] border-white/20 text-white hover:bg-white/20"
+            >
+              <SlidersHorizontal className="h-4 w-4 mr-2" />
+              Distribution Status
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="bg-[#1a2035] border-white/20">
+            <DropdownMenuItem 
+              onClick={() => setDistributionStatusFilter(null)}
+              className="focus:bg-white/10 focus:text-white"
+            >
+              All
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setDistributionStatusFilter("Approved")}
+              className="focus:bg-white/10 focus:text-white"
+            >
+              Approved
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setDistributionStatusFilter("To be Approved")}
+              className="focus:bg-white/10 focus:text-white"
+            >
+              To be Approved
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setDistributionStatusFilter("Invoiced")}
+              className="focus:bg-white/10 focus:text-white"
+            >
+              Invoiced Orders
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setDistributionStatusFilter("Cancelled")}
+              className="focus:bg-white/10 focus:text-white"
+            >
+              Canceled Orders
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setDistributionStatusFilter("Approved - On Hold")}
+              className="focus:bg-white/10 focus:text-white"
+            >
+              Approved On Hold Orders
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setDistributionStatusFilter("Approved Back order")}
+              className="focus:bg-white/10 focus:text-white"
+            >
+              Approved Back Order Orders
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setDistributionStatusFilter("On Hold")}
+              className="focus:bg-white/10 focus:text-white"
+            >
+              On Hold Orders
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Date Filter */}
         <Popover>
-  <PopoverTrigger asChild>
-    <Button variant="outline" className="min-w-[140px]">
-      <Calendar className="h-4 w-4 mr-2" />
-      {dateFilter ? formatDate(dateFilter.toISOString()) : "Filter Date"}
-    </Button>
-  </PopoverTrigger>
-  <PopoverContent 
-    className="w-auto p-0 bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 rounded-lg shadow-md"
-    align="start"
-    sideOffset={4}
-  >
-    <div className="p-2">
-      <div className="flex justify-center"> {/* Ensure Calendar is centered */}
-        <CalendarComponent
-          mode="single"
-          selected={dateFilter}
-          onSelect={setDateFilter}
-          initialFocus
-          className="calendar" // Apply custom class for extra styling if needed
-        />
-      </div>
-    </div>
-  </PopoverContent>
-</Popover>
-
-
+          <PopoverTrigger asChild>
+            <Button 
+              variant="outline" 
+              className={cn(
+                "min-w-[140px] bg-[#1a2035] border-white/20 text-white hover:bg-white/20",
+                dateFilter && "text-white bg-white/20"
+              )}
+            >
+              <Calendar className="h-4 w-4 mr-2" />
+              {dateFilter ? formatDate(dateFilter) : "Filter Date"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent 
+            className="w-auto p-0 bg-[#1a2035] border-white/20"
+            align="start"
+          >
+            <Calendar
+              mode="single"
+              selected={dateFilter}
+              onSelect={setDateFilter}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
 
         {/* Clear Filters */}
-        {(distributionStatusFilter || dateFilter) && (
+        {(distributionStatusFilter || dateFilter || searchTerm || selectedFilter !== "all") && (
           <Button
             variant="ghost"
             onClick={clearAllFilters}
-            className="text-sm"
+            className="text-sm text-white hover:bg-white/10"
           >
             Clear Filters
           </Button>
